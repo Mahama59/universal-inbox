@@ -120,3 +120,70 @@ function updateNotification(){
 
 
 updateNotification();
+
+
+// USER SYSTEM
+
+
+function register(){
+
+    let username =
+    document.getElementById("username").value;
+
+
+    let password =
+    document.getElementById("password").value;
+
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify({
+            username: username,
+            password: password
+        })
+    );
+
+
+    alert("Account created!");
+
+}
+
+
+
+function login(){
+
+    let username =
+    document.getElementById("username").value;
+
+
+    let password =
+    document.getElementById("password").value;
+
+
+    let savedUser =
+    JSON.parse(localStorage.getItem("user"));
+
+
+    if(savedUser &&
+       savedUser.username === username &&
+       savedUser.password === password){
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        alert("Login successful!");
+
+        window.location.href="index.html";
+
+    }
+
+    else{
+
+        alert("Wrong login details");
+
+    }
+
+}
