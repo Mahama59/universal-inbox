@@ -1,29 +1,33 @@
-// Universal Inbox App
+// Universal Inbox v0.2
 
-console.log("Universal Inbox loaded");
-
-
-const searchInput = document.querySelector(".search input");
-const messages = document.querySelectorAll(".message");
+console.log("Universal Inbox running");
 
 
-searchInput.addEventListener("keyup", function(){
+const inboxData = [
+    {
+        platform: "📧 Gmail",
+        sender: "John",
+        message: "Meeting reminder tomorrow",
+        time: "10:30 AM",
+        status: "Unread"
+    },
 
-    let searchText = searchInput.value.toLowerCase();
+    {
+        platform: "💬 Slack",
+        sender: "Marketing Team",
+        message: "New campaign update available",
+        time: "9:15 AM",
+        status: "Unread"
+    },
+
+    {
+        platform: "📅 Calendar",
+        sender: "Calendar",
+        message: "Project review at 3 PM",
+        time: "Today",
+        status: "Read"
+    }
+];
 
 
-    messages.forEach(function(message){
-
-        let content = message.textContent.toLowerCase();
-
-
-        if(content.includes(searchText)){
-            message.style.display = "block";
-        }
-        else{
-            message.style.display = "none";
-        }
-
-    });
-
-});
+console.log(inboxData);
