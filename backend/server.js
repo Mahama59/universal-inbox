@@ -4,24 +4,42 @@ const cors = require("cors");
 
 const app = express();
 
-
 app.use(cors());
 app.use(express.json());
 
 
-app.get("/", (req,res)=>{
+const messages = [
 
-    res.json({
-        message:"Universal Inbox Backend Running"
-    });
+{
+    id:1,
+    platform:"Gmail",
+    sender:"John",
+    message:"Meeting reminder tomorrow",
+    status:"Unread"
+},
+
+{
+    id:2,
+    platform:"Slack",
+    sender:"Marketing Team",
+    message:"New campaign update",
+    status:"Unread"
+}
+
+];
+
+
+
+app.get("/messages",(req,res)=>{
+
+    res.json(messages);
 
 });
 
 
+
 app.listen(3000,()=>{
 
-    console.log(
-        "Server running on port 3000"
-    );
+console.log("Universal Inbox API running");
 
 });
