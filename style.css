@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+
+header {
+    background: #2563eb;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+
+.search {
+    text-align: center;
+    padding: 20px;
+}
+
+
+.search input {
+    width: 80%;
+    max-width: 500px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+
+.inbox {
+    padding: 20px;
+}
+
+
+.message {
+    background: white;
+    margin: 15px auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+
+.message h3 {
+    margin-top: 0;
+}
+
+
+.message small {
+    color: #6b7280;
+}
+
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+}
