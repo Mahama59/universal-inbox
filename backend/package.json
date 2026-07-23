@@ -1,7 +1,7 @@
 {
   "name": "universal-inbox-backend",
   "version": "1.0.0",
-  "description": "Backend API for Universal Inbox",
+  "description": "Universal Inbox API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
