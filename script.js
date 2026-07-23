@@ -1,5 +1,6 @@
 // Universal Inbox v0.3
-
+const API =
+"http://localhost:3000/messages";
 console.log("Universal Inbox running");
 
 
