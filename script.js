@@ -1,9 +1,10 @@
-// Universal Inbox v0.2
+// Universal Inbox v0.3
 
 console.log("Universal Inbox running");
 
 
 const inboxData = [
+
     {
         platform: "📧 Gmail",
         sender: "John",
@@ -12,27 +13,6 @@ const inboxData = [
         status: "Unread"
     },
 
-const inbox = document.getElementById("inbox");
-
-
-inboxData.forEach(function(item){
-
-    const messageCard = document.createElement("div");
-
-    messageCard.className = "message";
-
-
-    messageCard.innerHTML = `
-        <h3>${item.platform}</h3>
-        <p><b>${item.sender}:</b> ${item.message}</p>
-        <small>${item.time} - ${item.status}</small>
-    `;
-
-
-    inbox.appendChild(messageCard);
-
-});
-    
     {
         platform: "💬 Slack",
         sender: "Marketing Team",
@@ -48,7 +28,78 @@ inboxData.forEach(function(item){
         time: "Today",
         status: "Read"
     }
+
 ];
 
 
-console.log(inboxData);
+const inbox = document.getElementById("inbox");
+
+
+inboxData.forEach(function(item, index){
+
+    const messageCard = document.createElement("div");
+
+    messageCard.className = "message";
+
+
+    messageCard.innerHTML = `
+
+        <h3>${item.platform}</h3>
+
+        <p><b>${item.sender}:</b> ${item.message}</p>
+
+        <small class="status">
+        ${item.time} - ${item.status}
+        </small>
+
+        <br><br>
+
+        <button class="read-btn">
+        Mark as Read
+        </button>
+
+        <button class="unread-btn">
+        Mark as Unread
+        </button>
+
+    `;
+
+
+    inbox.appendChild(messageCard);
+
+});
+
+
+
+const readButtons = document.querySelectorAll(".read-btn");
+const unreadButtons = document.querySelectorAll(".unread-btn");
+
+
+
+readButtons.forEach(function(button,index){
+
+    button.onclick = function(){
+
+        inboxData[index].status = "Read";
+
+        document.querySelectorAll(".status")[index].textContent =
+        inboxData[index].time + " - " + inboxData[index].status;
+
+    };
+
+});
+
+
+
+unreadButtons.forEach(function(button,index){
+
+    button.onclick = function(){
+
+        inboxData[index].status = "Unread";
+
+        document.querySelectorAll(".status")[index].textContent =
+        inboxData[index].time + " - " + inboxData[index].status;
+
+    };
+
+});
