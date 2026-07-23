@@ -12,6 +12,27 @@ const inboxData = [
         status: "Unread"
     },
 
+const inbox = document.getElementById("inbox");
+
+
+inboxData.forEach(function(item){
+
+    const messageCard = document.createElement("div");
+
+    messageCard.className = "message";
+
+
+    messageCard.innerHTML = `
+        <h3>${item.platform}</h3>
+        <p><b>${item.sender}:</b> ${item.message}</p>
+        <small>${item.time} - ${item.status}</small>
+    `;
+
+
+    inbox.appendChild(messageCard);
+
+});
+    
     {
         platform: "💬 Slack",
         sender: "Marketing Team",
