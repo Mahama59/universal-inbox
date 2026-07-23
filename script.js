@@ -4,41 +4,101 @@ const API =
 console.log("Universal Inbox running");
 
 
-const inboxData = [
-
-{
-    id: 1,
-    platform: "Gmail",
-    icon: "📧",
-    sender: "John",
-    message: "Meeting reminder tomorrow",
-    time: "10:30 AM",
-    status: "Unread"
-},
+let inboxData = [];
 
 
-{
-    id: 2,
-    platform: "Slack",
-    icon: "💬",
-    sender: "Marketing Team",
-    message: "New campaign update available",
-    time: "9:15 AM",
-    status: "Unread"
-},
+const inbox = document.getElementById("inbox");
 
 
-{
-    id: 3,
-    platform: "Calendar",
-    icon: "📅",
-    sender: "Calendar",
-    message: "Project review at 3 PM",
-    time: "Today",
-    status: "Read"
+
+fetch("http://localhost:3000/messages")
+
+.then(response => response.json())
+
+.then(data => {
+
+
+    inboxData = data;
+
+
+    displayMessages();
+
+
+});
+
+
+function displayMessages(){
+
+
+    inbox.innerHTML = "";
+
+
+    inboxData.forEach(function(item,index){
+
+
+        const messageCard =
+        document.createElement("div");
+
+
+        messageCard.className = "message";
+
+
+        messageCard.innerHTML = `
+
+        <h3>${item.platform}</h3>
+
+        <p>
+        <b>${item.sender}:</b>
+        ${item.message}
+        </p>
+
+
+        <small class="status">
+        ${item.status}
+        </small>
+
+
+        <br><br>
+
+
+        <button onclick="markRead(${index})">
+        Mark Read
+        </button>
+
+
+        <button onclick="markUnread(${index})">
+        Mark Unread
+        </button>
+
+        `;
+
+
+        inbox.appendChild(messageCard);
+
+
+    });
+
 }
 
-];
+
+
+function markRead(index){
+
+    inboxData[index].status="Read";
+
+    displayMessages();
+
+}
+
+
+
+function markUnread(index){
+
+    inboxData[index].status="Unread";
+
+    displayMessages();
+
+}
 
 const inbox = document.getElementById("inbox");
 
