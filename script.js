@@ -103,3 +103,20 @@ unreadButtons.forEach(function(button,index){
     };
 
 });
+
+function updateNotification(){
+
+    const unreadMessages = inboxData.filter(function(item){
+
+        return item.status === "Unread";
+
+    });
+
+
+    document.getElementById("notification").textContent =
+    "🔔 " + unreadMessages.length;
+
+}
+
+
+updateNotification();
