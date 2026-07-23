@@ -80,6 +80,16 @@ button {
     color: white;
 }
 
+#notification {
+
+    font-size: 18px;
+    background: white;
+    color: #2563eb;
+    padding: 8px 12px;
+    border-radius: 20px;
+    margin-left: 10px;
+
+}
 footer {
     text-align: center;
     padding: 20px;
