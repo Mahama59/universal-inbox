@@ -613,4 +613,121 @@ function initApp(){
 
 }
 
+function register(){
 
+    const username =
+    document.getElementById("username").value;
+
+
+    const password =
+    document.getElementById("password").value;
+
+
+    fetch("http://localhost:3000/auth/register", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            username: username,
+
+            password: password
+
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        alert(data.message);
+
+    })
+
+    .catch(error => {
+
+        console.log(error);
+
+    });
+
+}
+
+function login(){
+
+    const username =
+    document.getElementById("username").value;
+
+
+    const password =
+    document.getElementById("password").value;
+
+
+    fetch("http://localhost:3000/auth/login", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            username: username,
+
+            password: password
+
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+
+        if(data.user){
+
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.user)
+            );
+
+
+            localStorage.setItem(
+                "loggedIn",
+                "true"
+            );
+
+
+            alert("Login successful!");
+
+
+            window.location.href="index.html";
+
+
+        }
+
+        else{
+
+
+            alert(data.message);
+
+
+        }
+
+
+    })
+
+    .catch(error => {
+
+        console.log(error);
+
+    });
+
+}
