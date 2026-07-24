@@ -20,7 +20,12 @@ Logout
 </button>
 
 </header>
-
+<select id="platformFilter" onchange="filterMessages()">
+    <option value="All">All Platforms</option>
+    <option value="Gmail">📧 Gmail</option>
+    <option value="Slack">💬 Slack</option>
+    <option value="Calendar">📅 Calendar</option>
+</select>
 
 <section class="search">
     <input
