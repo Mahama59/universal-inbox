@@ -61,14 +61,13 @@ function displayMessages(){
         <br><br>
 
 
-        <button onclick="markRead(${index})">
-        Mark Read
-        </button>
+<button onclick="markRead(${index})">✅ Read</button>
 
+<button onclick="markUnread(${index})">📩 Unread</button>
 
-        <button onclick="markUnread(${index})">
-        Mark Unread
-        </button>
+<button onclick="archiveMessage(${index})">📦 Archive</button>
+
+<button onclick="deleteMessage(${index})">🗑️ Delete</button>
 
         `;
 
@@ -174,21 +173,16 @@ unreadButtons.forEach(function(button,index){
 
 function updateNotification(){
 
-    const unreadMessages = inboxData.filter(function(item){
+    const unread = inboxData.filter(function(item){
 
         return item.status === "Unread";
 
     });
 
-
     document.getElementById("notification").textContent =
-    "🔔 " + unreadMessages.length;
+    "🔔 " + unread.length;
 
 }
-
-
-updateNotification();
-
 
 // USER SYSTEM
 
@@ -277,5 +271,26 @@ function logout(){
     localStorage.removeItem("loggedIn");
 
     window.location.href="login.html";
+
+}
+
+function archiveMessage(index){
+
+    inboxData[index].status = "Archived";
+
+    displayMessages();
+
+    updateNotification();
+
+}
+
+
+function deleteMessage(index){
+
+    inboxData.splice(index, 1);
+
+    displayMessages();
+
+    updateNotification();
 
 }
