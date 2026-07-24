@@ -1,257 +1,365 @@
-// Universal Inbox v0.3
-const API =
-"http://localhost:3000/messages";
+// Universal Inbox v1.0
+
+
 console.log("Universal Inbox running");
 
 
-let inboxData = [];
+// Load messages from storage first
+let inboxData =
+JSON.parse(localStorage.getItem("inboxData")) || [
+
+    {
+        id: 1,
+        platform: "📧 Gmail",
+        sender: "John",
+        message: "Meeting reminder tomorrow",
+        time: "10:30 AM",
+        status: "Unread",
+        starred: false
+    },
+
+    {
+        id: 2,
+        platform: "💬 Slack",
+        sender: "Marketing Team",
+        message: "New campaign update available",
+        time: "9:15 AM",
+        status: "Unread",
+        starred: false
+    },
+
+    {
+        id: 3,
+        platform: "📅 Calendar",
+        sender: "Calendar",
+        message: "Project review at 3 PM",
+        time: "Today",
+        status: "Read",
+        starred: false
+    }
+
+];
 
 
-const inbox = document.getElementById("inbox");
+// Save messages
+function saveMessages(){
 
-
-
-fetch("https://universal-inbox-api.onrender.com/messages")
-
-.then(response => response.json())
-
-.then(data => {
-
-
-    inboxData = data;
-
-
-    displayMessages();
-
-
-});
-
-
-function displayMessages(messages = inboxData) {
-
-    inbox.innerHTML = "";
-
-    messages.forEach(function(item, index) {
-
-        const messageCard = document.createElement("div");
-
-        messageCard.className = "message";
-
-      messageCard.innerHTML = `
-    <div onclick="openMessage(${index})" style="cursor:pointer;">
-    <h3>${item.starred ? "⭐" : ""} ${item.platform}</h3>
-
-    <p><b>${item.sender}:</b> ${item.message}</p>
-
-    <small class="status">${item.status}</small>
-</div>
-   
-    <br><br>
-
-    <button onclick="toggleStar(${index})">⭐ Star</button>
-
-    <button onclick="markRead(${index})">✅ Read</button>
-
-    <button onclick="markUnread(${index})">📩 Unread</button>
-
-    <button onclick="archiveMessage(${index})">📦 Archive</button>
-
-    <button onclick="deleteMessage(${index})">🗑️ Delete</button>
-`;
-
-        inbox.appendChild(messageCard);
-
-    });
+    localStorage.setItem(
+        "inboxData",
+        JSON.stringify(inboxData)
+    );
 
 }
 
 
 
+// Display messages
+function displayMessages(messages = inboxData){
+
+    const inbox =
+    document.getElementById("inbox");
+
+
+    if(!inbox) return;
+
+
+    inbox.innerHTML = "";
+
+
+    messages.forEach(function(item,index){
+
+
+        const messageCard =
+        document.createElement("div");
+
+
+        messageCard.className="message";
+
+
+        messageCard.innerHTML = `
+
+        <div onclick="openMessage(${index})"
+        style="cursor:pointer;">
+
+        <h3>
+        ${item.starred ? "⭐" : ""}
+        ${item.platform}
+        </h3>
+
+
+        <p>
+        <b>${item.sender}:</b>
+        ${item.message}
+        </p>
+
+
+        <small>
+        ${item.time} -
+        ${item.status}
+        </small>
+
+
+        </div>
+
+
+        <br>
+
+
+        <button onclick="toggleStar(${index})">
+        ⭐ Star
+        </button>
+
+
+        <button onclick="markRead(${index})">
+        ✅ Read
+        </button>
+
+
+        <button onclick="markUnread(${index})">
+        📩 Unread
+        </button>
+
+
+        <button onclick="archiveMessage(${index})">
+        📦 Archive
+        </button>
+
+
+        <button onclick="deleteMessage(${index})">
+        🗑️ Delete
+        </button>
+
+        `;
+
+
+        inbox.appendChild(messageCard);
+
+
+    });
+
+
+    updateNotification();
+
+}
+
+
+
+
+// Mark read
 function markRead(index){
 
     inboxData[index].status="Read";
 
+    saveMessages();
+
     displayMessages();
 
 }
 
 
 
+// Mark unread
 function markUnread(index){
 
     inboxData[index].status="Unread";
 
+    saveMessages();
+
     displayMessages();
 
 }
 
-const inbox = document.getElementById("inbox");
 
 
-inboxData.forEach(function(item, index){
+// Star message
+function toggleStar(index){
 
-    const messageCard = document.createElement("div");
-
-    messageCard.className = "message";
-
-
-    messageCard.innerHTML = `
-
-        <h3>${item.platform}</h3>
-
-        <p><b>${item.sender}:</b> ${item.message}</p>
-
-        <small class="status">
-        ${item.time} - ${item.status}
-        </small>
-
-        <br><br>
-
-        <button class="read-btn">
-        Mark as Read
-        </button>
-
-        <button class="unread-btn">
-        Mark as Unread
-        </button>
-
-    `;
+    inboxData[index].starred =
+    !inboxData[index].starred;
 
 
-    inbox.appendChild(messageCard);
+    saveMessages();
 
-});
-
-
-
-const readButtons = document.querySelectorAll(".read-btn");
-const unreadButtons = document.querySelectorAll(".unread-btn");
-
-
-
-readButtons.forEach(function(button,index){
-
-    button.onclick = function(){
-
-        inboxData[index].status = "Read";
-
-        document.querySelectorAll(".status")[index].textContent =
-        inboxData[index].time + " - " + inboxData[index].status;
-
-    };
-
-});
-
-
-
-unreadButtons.forEach(function(button,index){
-
-    button.onclick = function(){
-
-        inboxData[index].status = "Unread";
-
-        document.querySelectorAll(".status")[index].textContent =
-        inboxData[index].time + " - " + inboxData[index].status;
-
-    };
-
-});
-
-function updateNotification(){
-
-    const unread = inboxData.filter(function(item){
-
-        return item.status === "Unread";
-
-    });
-
-    document.getElementById("notification").textContent =
-    "🔔 " + unread.length;
-
-}
-
-// USER SYSTEM
-
-
-function register(){
-
-    let username =
-    document.getElementById("username").value;
-
-
-    let password =
-    document.getElementById("password").value;
-
-
-    localStorage.setItem(
-        "user",
-        JSON.stringify({
-            username: username,
-            password: password
-        })
-    );
-
-
-    alert("Account created!");
+    displayMessages();
 
 }
 
 
 
-function login(){
+// Archive
+function archiveMessage(index){
 
-    let username =
-    document.getElementById("username").value;
+    inboxData[index].status="Archived";
 
+    saveMessages();
 
-    let password =
-    document.getElementById("password").value;
+    displayMessages();
 
-
-    let savedUser =
-    JSON.parse(localStorage.getItem("user"));
+}
 
 
-    if(savedUser &&
-       savedUser.username === username &&
-       savedUser.password === password){
 
-        localStorage.setItem(
-            "loggedIn",
-            "true"
+// Delete
+function deleteMessage(index){
+
+    inboxData.splice(index,1);
+
+    saveMessages();
+
+    displayMessages();
+
+}
+
+
+
+// Search
+function searchMessages(){
+
+    const keyword =
+    document.getElementById("searchBox")
+    .value
+    .toLowerCase();
+
+
+
+    const filtered =
+    inboxData.filter(function(item){
+
+
+        return (
+
+            item.sender.toLowerCase()
+            .includes(keyword)
+
+
+            ||
+
+            item.message.toLowerCase()
+            .includes(keyword)
+
+
+            ||
+
+            item.platform.toLowerCase()
+            .includes(keyword)
+
         );
 
 
-        alert("Login successful!");
+    });
 
-        window.location.href="index.html";
 
-    }
-
-    else{
-
-        alert("Wrong login details");
-
-    }
+    displayMessages(filtered);
 
 }
 
-// USER SESSION
 
+
+// Platform filter
+function filterMessages(){
+
+
+    const selected =
+    document.getElementById("platformFilter")
+    .value;
+
+
+
+    if(selected==="All"){
+
+        displayMessages();
+
+        return;
+
+    }
+
+
+
+    const filtered =
+    inboxData.filter(function(item){
+
+        return item.platform.includes(selected);
+
+    });
+
+
+
+    displayMessages(filtered);
+
+}
+
+
+
+// Open message details
+function openMessage(index){
+
+
+    localStorage.setItem(
+        "selectedMessage",
+        JSON.stringify(inboxData[index])
+    );
+
+
+    window.location.href="message.html";
+
+
+}
+
+
+
+// Notification count
+function updateNotification(){
+
+
+    const notification =
+    document.getElementById("notification");
+
+
+    if(!notification) return;
+
+
+
+    const unread =
+    inboxData.filter(function(item){
+
+        return item.status==="Unread";
+
+    });
+
+
+
+    notification.textContent =
+    "🔔 " + unread.length;
+
+
+}
+
+
+
+
+// User session
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
 
-if(currentUser){
 
-    document.getElementById("welcome").textContent =
+const welcome =
+document.getElementById("welcome");
+
+
+
+if(currentUser && welcome){
+
+    welcome.textContent =
     "Welcome " + currentUser.username;
 
 }
 
 
 
+
+// Logout
 function logout(){
 
     localStorage.removeItem("loggedIn");
@@ -260,85 +368,8 @@ function logout(){
 
 }
 
-function archiveMessage(index){
-
-    inboxData[index].status = "Archived";
-
-    displayMessages();
-
-    updateNotification();
-
-}
 
 
-function deleteMessage(index){
+// Start app
 
-    inboxData.splice(index, 1);
-
-    displayMessages();
-
-    updateNotification();
-
-}
-
-function searchMessages() {
-
-    const keyword = document
-        .getElementById("searchBox")
-        .value
-        .toLowerCase();
-
-    const filtered = inboxData.filter(function(item) {
-
-        return (
-            item.sender.toLowerCase().includes(keyword) ||
-            item.message.toLowerCase().includes(keyword) ||
-            item.platform.toLowerCase().includes(keyword)
-        );
-
-    });
-
-    displayMessages(filtered);
-
-}
-
-function filterMessages() {
-
-    const selected =
-        document.getElementById("platformFilter").value;
-
-    if (selected === "All") {
-
-        displayMessages();
-
-        return;
-    }
-
-    const filtered = inboxData.filter(function(item) {
-
-        return item.platform === selected;
-
-    });
-
-    displayMessages(filtered);
-
-}
-
-function toggleStar(index){
-
-    inboxData[index].starred = !inboxData[index].starred;
-
-    displayMessages();
-
-}
-
-function openMessage(index){
-
-    localStorage.setItem(
-        "selectedMessage",
-        JSON.stringify(inboxData[index])
-    );
-
-    window.location.href = "message.html";
-
-}
+displayMessages();
