@@ -92,6 +92,7 @@ function displayMessages(messages = inboxData){
         ${item.message}
         </p>
 
+${item.attachment ? "📎 " + item.attachment : ""}
 
         <small>
         ${item.time} -
