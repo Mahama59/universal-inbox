@@ -76,8 +76,19 @@ window.location.href="index.html";
 }
 
 function sendMessage(){
-
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
     const message = {
+userId: currentUser.id,
+    if(!currentUser){
+
+    alert("Please login first");
+
+    window.location.href="login.html";
+
+    return;
+
+}
 
         platform: document.getElementById("platform").value,
 
