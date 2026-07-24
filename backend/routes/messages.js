@@ -5,7 +5,19 @@ const { messages } = require("../database/db");
 
 // Get all messages
 router.get("/", (req, res) => {
-    res.json(messages);
+
+    const userId = parseInt(req.query.userId);
+
+
+    const userMessages = messages.filter(message => {
+
+        return message.userId === userId;
+
+    });
+
+
+    res.json(userMessages);
+
 });
 
 router.post("/", (req, res) => {
