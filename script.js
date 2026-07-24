@@ -614,8 +614,9 @@ function loadDarkMode(){
 
 }
 
-
 function initApp(){
+
+    checkSession();
 
     displayMessages();
 
