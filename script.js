@@ -27,53 +27,30 @@ fetch("https://universal-inbox-api.onrender.com/messages")
 });
 
 
-function displayMessages(){
-
+function displayMessages(messages = inboxData) {
 
     inbox.innerHTML = "";
 
+    messages.forEach(function(item, index) {
 
-    inboxData.forEach(function(item,index){
-
-
-        const messageCard =
-        document.createElement("div");
-
+        const messageCard = document.createElement("div");
 
         messageCard.className = "message";
 
-
         messageCard.innerHTML = `
+            <h3>${item.platform}</h3>
+            <p><b>${item.sender}:</b> ${item.message}</p>
+            <small class="status">${item.status}</small>
 
-        <h3>${item.platform}</h3>
+            <br><br>
 
-        <p>
-        <b>${item.sender}:</b>
-        ${item.message}
-        </p>
-
-
-        <small class="status">
-        ${item.status}
-        </small>
-
-
-        <br><br>
-
-
-<button onclick="markRead(${index})">✅ Read</button>
-
-<button onclick="markUnread(${index})">📩 Unread</button>
-
-<button onclick="archiveMessage(${index})">📦 Archive</button>
-
-<button onclick="deleteMessage(${index})">🗑️ Delete</button>
-
+            <button onclick="markRead(${index})">✅ Read</button>
+            <button onclick="markUnread(${index})">📩 Unread</button>
+            <button onclick="archiveMessage(${index})">📦 Archive</button>
+            <button onclick="deleteMessage(${index})">🗑️ Delete</button>
         `;
 
-
         inbox.appendChild(messageCard);
-
 
     });
 
@@ -292,5 +269,26 @@ function deleteMessage(index){
     displayMessages();
 
     updateNotification();
+
+}
+
+function searchMessages() {
+
+    const keyword = document
+        .getElementById("searchBox")
+        .value
+        .toLowerCase();
+
+    const filtered = inboxData.filter(function(item) {
+
+        return (
+            item.sender.toLowerCase().includes(keyword) ||
+            item.message.toLowerCase().includes(keyword) ||
+            item.platform.toLowerCase().includes(keyword)
+        );
+
+    });
+
+    displayMessages(filtered);
 
 }
