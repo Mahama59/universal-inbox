@@ -321,3 +321,11 @@ function filterMessages() {
     displayMessages(filtered);
 
 }
+
+function toggleStar(index){
+
+    inboxData[index].starred = !inboxData[index].starred;
+
+    displayMessages();
+
+}
