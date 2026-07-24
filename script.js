@@ -494,10 +494,11 @@ function logout(){
 
     localStorage.removeItem("loggedIn");
 
+    localStorage.removeItem("user");
+
     window.location.href="login.html";
 
 }
-
 
 
 // Start app
