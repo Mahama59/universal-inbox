@@ -396,3 +396,34 @@ if(localStorage.getItem("darkMode") === "true"){
     document.body.classList.add("dark");
 
 }
+
+const profileUser =
+JSON.parse(localStorage.getItem("user"));
+
+
+if(profileUser){
+
+    const username =
+    document.getElementById("username");
+
+
+    const email =
+    document.getElementById("email");
+
+
+    if(username){
+
+        username.textContent =
+        profileUser.username;
+
+    }
+
+
+    if(email){
+
+        email.textContent =
+        profileUser.email || "Not added";
+
+    }
+
+}
