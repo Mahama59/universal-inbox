@@ -11,8 +11,9 @@ function saveMessage(){
 
     const message =
     document.getElementById("message").value;
-
-
+    
+   const file =
+document.getElementById("attachment").files[0];
 
     if(!sender || !platform || !message){
 
@@ -31,23 +32,24 @@ function saveMessage(){
 
     const newMessage = {
 
-        id: Date.now(),
+id: Date.now(),
 
-        platform: platform,
+platform: platform,
 
-        sender: sender,
+sender: sender,
 
-        message: message,
+message: message,
 
-        time: new Date()
-        .toLocaleTimeString(),
+attachment: file ? file.name : "",
 
-        status:"Unread",
+time: new Date()
+.toLocaleTimeString(),
 
-        starred:false
+status:"Unread",
 
-    };
+starred:false
 
+};
 
 
     inboxData.unshift(newMessage);
