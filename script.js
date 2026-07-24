@@ -372,7 +372,7 @@ function logout(){
 
 // Start app
 
-displayMessages();
+initApp();
 
 function toggleDarkMode(){
 
@@ -453,3 +453,49 @@ function checkNewMessages(){
 
 
 checkNewMessages();
+
+
+function loadUserProfile(){
+
+    const user =
+    JSON.parse(localStorage.getItem("user"));
+
+
+    const username =
+    document.getElementById("username");
+
+
+    if(user && username){
+
+        username.textContent =
+        user.username;
+
+    }
+
+}
+
+function loadDarkMode(){
+
+    if(localStorage.getItem("darkMode") === "true"){
+
+        document.body.classList.add("dark");
+
+    }
+
+}
+
+
+function initApp(){
+
+    displayMessages();
+
+    updateNotification();
+
+    loadDarkMode();
+
+    loadUserProfile();
+
+}
+
+
+initApp();
