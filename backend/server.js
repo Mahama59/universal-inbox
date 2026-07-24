@@ -16,7 +16,10 @@ const messages = [
     sender:"John",
     message:"Meeting reminder tomorrow",
     status:"Unread"
+    starred: false
 },
+    
+    
 
 {
     id:2,
@@ -24,6 +27,7 @@ const messages = [
     sender:"Marketing Team",
     message:"New campaign update",
     status:"Unread"
+    starred: false
 }
 
 ];
