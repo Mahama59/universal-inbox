@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+
+<header>
+    <h1>📨 Message Details</h1>
+</header>
+
+<div class="message">
+
+    <h2 id="platform"></h2>
+
+    <p><strong>From:</strong> <span id="sender"></span></p>
+
+    <p><strong>Message:</strong></p>
+    <p id="message"></p>
+
+    <p><strong>Time:</strong> <span id="time"></span></p>
+
+    <p><strong>Status:</strong> <span id="status"></span></p>
+
+    <br>
+
+    <button onclick="goBack()">⬅ Back to Inbox</button>
+
+</div>
+
+<script>
+
+const selectedMessage =
+JSON.parse(localStorage.getItem("selectedMessage"));
+
+if(selectedMessage){
+
+    document.getElementById("platform").textContent =
+        selectedMessage.platform;
+
+    document.getElementById("sender").textContent =
+        selectedMessage.sender;
+
+    document.getElementById("message").textContent =
+        selectedMessage.message;
+
+    document.getElementById("time").textContent =
+        selectedMessage.time;
+
+    document.getElementById("status").textContent =
+        selectedMessage.status;
+
+}
+
+function goBack(){
+
+    window.location.href = "index.html";
+
+}
+
+</script>
+
+</body>
+</html>
