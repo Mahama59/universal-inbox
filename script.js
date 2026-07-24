@@ -11,7 +11,7 @@ const inbox = document.getElementById("inbox");
 
 
 
-fetch("http://localhost:3000/messages")
+fetch("https://universal-inbox-api.onrender.com/messages")
 
 .then(response => response.json())
 
