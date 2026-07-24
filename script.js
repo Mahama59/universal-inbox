@@ -292,3 +292,25 @@ function searchMessages() {
     displayMessages(filtered);
 
 }
+
+function filterMessages() {
+
+    const selected =
+        document.getElementById("platformFilter").value;
+
+    if (selected === "All") {
+
+        displayMessages();
+
+        return;
+    }
+
+    const filtered = inboxData.filter(function(item) {
+
+        return item.platform === selected;
+
+    });
+
+    displayMessages(filtered);
+
+}
