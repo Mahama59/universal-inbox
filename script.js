@@ -427,3 +427,29 @@ if(profileUser){
     }
 
 }
+
+function checkNewMessages(){
+
+    const notification =
+    document.getElementById("notification");
+
+
+    if(!notification) return;
+
+
+    const unread =
+    inboxData.filter(function(item){
+
+        return item.status === "Unread";
+
+    });
+
+
+    notification.textContent =
+    unread.length;
+
+
+}
+
+
+checkNewMessages();
