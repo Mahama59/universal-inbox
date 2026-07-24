@@ -31,6 +31,17 @@ router.get("/", (req,res)=>{
 
 });
 
+router.post("/", (req, res) => {
 
+    const newMessage = {
+        id: messages.length + 1,
+        ...req.body
+    };
+
+    messages.push(newMessage);
+
+    res.status(201).json(newMessage);
+
+});
 
 module.exports = router;
