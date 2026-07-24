@@ -255,3 +255,27 @@ function login(){
     }
 
 }
+
+// USER SESSION
+
+
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+
+if(currentUser){
+
+    document.getElementById("welcome").textContent =
+    "Welcome " + currentUser.username;
+
+}
+
+
+
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href="login.html";
+
+}
