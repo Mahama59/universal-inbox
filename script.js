@@ -5,9 +5,30 @@ console.log("Universal Inbox running");
 
 
 // Load messages from storage first
-let inboxData =
-JSON.parse(localStorage.getItem("inboxData")) || [
+// Load messages from backend API
 
+let inboxData = [];
+
+
+fetch("http://localhost:3000/messages")
+
+.then(response => response.json())
+
+.then(data => {
+
+    inboxData = data;
+
+    displayMessages();
+
+    updateNotification();
+
+})
+
+.catch(error => {
+
+    console.log("API Error:", error);
+
+});
     {
         id: 1,
         platform: "📧 Gmail",
