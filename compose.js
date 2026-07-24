@@ -54,18 +54,21 @@ function saveMessage(){
 
 
 
-    localStorage.setItem(
-        "inboxData",
-        JSON.stringify(inboxData)
-    );
+localStorage.setItem(
+    "inboxData",
+    JSON.stringify(inboxData)
+);
 
 
+localStorage.setItem(
+    "newMessage",
+    "true"
+);
 
-    alert("Message created successfully!");
 
+alert("Message created successfully!");
 
-
-    window.location.href="index.html";
+window.location.href="index.html";
 
 
 }
