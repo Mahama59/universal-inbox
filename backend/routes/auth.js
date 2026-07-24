@@ -2,10 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
+
 const users = [];
 
 
-// Register user
+// Register
 
 router.post("/register", (req,res)=>{
 
@@ -14,8 +15,6 @@ router.post("/register", (req,res)=>{
         id: users.length + 1,
 
         username: req.body.username,
-
-        email: req.body.email,
 
         password: req.body.password
 
@@ -36,15 +35,14 @@ router.post("/register", (req,res)=>{
 });
 
 
-
-// Login user
+// Login
 
 router.post("/login",(req,res)=>{
 
 
     const user = users.find(user =>
 
-        user.email === req.body.email &&
+        user.username === req.body.username &&
 
         user.password === req.body.password
 
@@ -74,8 +72,7 @@ router.post("/login",(req,res)=>{
 });
 
 
-
-// Check authentication
+// Status
 
 router.get("/status",(req,res)=>{
 
