@@ -76,19 +76,25 @@ window.location.href="index.html";
 }
 
 function sendMessage(){
-const currentUser =
-JSON.parse(localStorage.getItem("user"));
-    const message = {
-userId: currentUser.id,
+
+    const currentUser =
+    JSON.parse(localStorage.getItem("user"));
+
+
     if(!currentUser){
 
-    alert("Please login first");
+        alert("Please login first");
 
-    window.location.href="login.html";
+        window.location.href="login.html";
 
-    return;
+        return;
 
-}
+    }
+
+
+    const message = {
+
+        userId: currentUser.id,
 
         platform: document.getElementById("platform").value,
 
@@ -107,13 +113,13 @@ userId: currentUser.id,
 
     fetch("http://localhost:3000/messages", {
 
-        method: "POST",
+        method:"POST",
 
-        headers: {
-            "Content-Type": "application/json"
+        headers:{
+            "Content-Type":"application/json"
         },
 
-        body: JSON.stringify(message)
+        body:JSON.stringify(message)
 
     })
 
