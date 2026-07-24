@@ -74,3 +74,54 @@ window.location.href="index.html";
 
 
 }
+
+function sendMessage(){
+
+    const message = {
+
+        platform: document.getElementById("platform").value,
+
+        sender: document.getElementById("sender").value,
+
+        message: document.getElementById("message").value,
+
+        time: new Date().toLocaleTimeString(),
+
+        status: "Unread",
+
+        starred: false
+
+    };
+
+
+    fetch("http://localhost:3000/messages", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(message)
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        console.log("Message saved:", data);
+
+        alert("Message sent!");
+
+        window.location.href="index.html";
+
+    })
+
+    .catch(error => {
+
+        console.log("Error:", error);
+
+    });
+
+}
