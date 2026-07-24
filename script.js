@@ -38,12 +38,14 @@ function displayMessages(messages = inboxData) {
         messageCard.className = "message";
 
       messageCard.innerHTML = `
+    <div onclick="openMessage(${index})" style="cursor:pointer;">
     <h3>${item.starred ? "⭐" : ""} ${item.platform}</h3>
 
     <p><b>${item.sender}:</b> ${item.message}</p>
 
     <small class="status">${item.status}</small>
-
+</div>
+   
     <br><br>
 
     <button onclick="toggleStar(${index})">⭐ Star</button>
@@ -327,5 +329,16 @@ function toggleStar(index){
     inboxData[index].starred = !inboxData[index].starred;
 
     displayMessages();
+
+}
+
+function openMessage(index){
+
+    localStorage.setItem(
+        "selectedMessage",
+        JSON.stringify(inboxData[index])
+    );
+
+    window.location.href = "message.html";
 
 }
