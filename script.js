@@ -167,14 +167,34 @@ ${item.attachment ? "📎 " + item.attachment : ""}
 
 
 
-// Mark read
 function markRead(index){
 
-    inboxData[index].status="Read";
+    const id = inboxData[index].id;
 
-    saveMessages();
 
-    displayMessages();
+    fetch(`http://localhost:3000/messages/${id}`, {
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            status:"Read"
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        inboxData[index] = data;
+
+        displayMessages();
+
+    });
 
 }
 
