@@ -1,34 +1,11 @@
 const express = require("express");
-
 const router = express.Router();
 
-
-const gmail =
-require("../services/gmail");
-
-
-const slack =
-require("../services/slack");
-
-
+const { messages } = require("../database/db");
 
 // Get all messages
-
-router.get("/", (req,res)=>{
-
-
-    const messages = [
-
-        ...gmail.getGmailMessages(),
-
-        ...slack.getSlackMessages()
-
-    ];
-
-
+router.get("/", (req, res) => {
     res.json(messages);
-
-
 });
 
 router.post("/", (req, res) => {
@@ -41,6 +18,44 @@ router.post("/", (req, res) => {
     messages.push(newMessage);
 
     res.status(201).json(newMessage);
+
+});
+
+router.put("/:id", (req, res) => {
+
+    const id = parseInt(req.params.id);
+
+    const message = messages.find(m => m.id === id);
+
+    if (!message) {
+        return res.status(404).json({
+            error: "Message not found"
+        });
+    }
+
+    Object.assign(message, req.body);
+
+    res.json(message);
+
+});
+
+router.delete("/:id", (req, res) => {
+
+    const id = parseInt(req.params.id);
+
+    const index = messages.findIndex(m => m.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({
+            error: "Message not found"
+        });
+    }
+
+    messages.splice(index, 1);
+
+    res.json({
+        message: "Message deleted"
+    });
 
 });
 
