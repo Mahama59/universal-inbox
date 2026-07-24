@@ -12,26 +12,24 @@ const messages = [
 
 {
     id:1,
-    platform:"Gmail",
+    platform:"📧 Gmail",
     sender:"John",
     message:"Meeting reminder tomorrow",
-    status:"Unread"
-    starred: false
+    status:"Unread",
+    starred:false
 },
-    
-    
+
 
 {
     id:2,
-    platform:"Slack",
+    platform:"💬 Slack",
     sender:"Marketing Team",
     message:"New campaign update",
-    status:"Unread"
-    starred: false
+    status:"Unread",
+    starred:false
 }
 
 ];
-
 
 
 app.get("/messages",(req,res)=>{
@@ -41,9 +39,8 @@ app.get("/messages",(req,res)=>{
 });
 
 
-
 app.listen(3000,()=>{
 
-console.log("Universal Inbox API running");
+    console.log("Universal Inbox API running");
 
 });
