@@ -24,7 +24,13 @@ console.log("Universal Inbox running");
 let inboxData = [];
 
 
-fetch("http://localhost:3000/messages")
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+
+fetch(
+"http://localhost:3000/messages?userId=" + currentUser.id
+)
 
 .then(response => response.json())
 
