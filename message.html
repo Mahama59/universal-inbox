@@ -20,6 +20,19 @@
     <p><strong>Message:</strong></p>
     <p id="message"></p>
 
+     <br>
+
+<h3>🤖 AI Summary</h3>
+
+<p id="summary">
+No summary yet.
+</p>
+
+
+<button onclick="generateSummary()">
+Generate Summary
+</button>
+    
     <p><strong>Time:</strong> <span id="time"></span></p>
 
     <p><strong>Status:</strong> <span id="status"></span></p>
@@ -54,6 +67,37 @@ if(selectedMessage){
 
 }
 
+function generateSummary(){
+
+    const text =
+    selectedMessage.message;
+
+
+    let summary = "";
+
+
+    if(text.length < 50){
+
+        summary =
+        "Short message: " + text;
+
+    }
+
+    else{
+
+        summary =
+        text.substring(0,80)
+        + "...";
+
+    }
+
+
+    document.getElementById("summary")
+    .textContent = summary;
+
+
+}
+    
 function goBack(){
 
     window.location.href = "index.html";
