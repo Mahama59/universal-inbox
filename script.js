@@ -37,18 +37,25 @@ function displayMessages(messages = inboxData) {
 
         messageCard.className = "message";
 
-        messageCard.innerHTML = `
-            <h3>${item.platform}</h3>
-            <p><b>${item.sender}:</b> ${item.message}</p>
-            <small class="status">${item.status}</small>
+      messageCard.innerHTML = `
+    <h3>${item.starred ? "⭐" : ""} ${item.platform}</h3>
 
-            <br><br>
+    <p><b>${item.sender}:</b> ${item.message}</p>
 
-            <button onclick="markRead(${index})">✅ Read</button>
-            <button onclick="markUnread(${index})">📩 Unread</button>
-            <button onclick="archiveMessage(${index})">📦 Archive</button>
-            <button onclick="deleteMessage(${index})">🗑️ Delete</button>
-        `;
+    <small class="status">${item.status}</small>
+
+    <br><br>
+
+    <button onclick="toggleStar(${index})">⭐ Star</button>
+
+    <button onclick="markRead(${index})">✅ Read</button>
+
+    <button onclick="markUnread(${index})">📩 Unread</button>
+
+    <button onclick="archiveMessage(${index})">📦 Archive</button>
+
+    <button onclick="deleteMessage(${index})">🗑️ Delete</button>
+`;
 
         inbox.appendChild(messageCard);
 
