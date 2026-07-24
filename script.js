@@ -1,3 +1,17 @@
+function checkSession(){
+
+    const loggedIn =
+    localStorage.getItem("loggedIn");
+
+
+    if(!loggedIn){
+
+        window.location.href="login.html";
+
+    }
+
+}
+
 // Universal Inbox v1.0
 
 
