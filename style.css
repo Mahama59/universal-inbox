@@ -95,3 +95,28 @@ footer {
     padding: 20px;
     color: #6b7280;
 }
+
+.dark {
+
+    background:#111827;
+    color:white;
+
+}
+
+
+.dark .message {
+
+    background:#1f2937;
+    color:white;
+
+}
+
+
+.dark input,
+.dark textarea,
+.dark select {
+
+    background:#374151;
+    color:white;
+
+}
