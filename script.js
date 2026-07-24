@@ -203,11 +203,32 @@ function markRead(index){
 // Mark unread
 function markUnread(index){
 
-    inboxData[index].status="Unread";
+    const id = inboxData[index].id;
 
-    saveMessages();
 
-    displayMessages();
+    fetch(`http://localhost:3000/messages/${id}`, {
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            status:"Unread"
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        inboxData[index] = data;
+
+        displayMessages();
+
+    });
 
 }
 
@@ -216,42 +237,95 @@ function markUnread(index){
 // Star message
 function toggleStar(index){
 
-    inboxData[index].starred =
+    const id = inboxData[index].id;
+
+    const newStar =
     !inboxData[index].starred;
 
 
-    saveMessages();
+    fetch(`http://localhost:3000/messages/${id}`, {
 
-    displayMessages();
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            starred:newStar
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        inboxData[index] = data;
+
+        displayMessages();
+
+    });
 
 }
-
 
 
 // Archive
 function archiveMessage(index){
 
-    inboxData[index].status="Archived";
+    const id = inboxData[index].id;
 
-    saveMessages();
 
-    displayMessages();
+    fetch(`http://localhost:3000/messages/${id}`, {
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            status:"Archived"
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        inboxData[index] = data;
+
+        displayMessages();
+
+    });
 
 }
-
 
 
 // Delete
 function deleteMessage(index){
 
-    inboxData.splice(index,1);
+    const id = inboxData[index].id;
 
-    saveMessages();
 
-    displayMessages();
+    fetch(`http://localhost:3000/messages/${id}`, {
+
+        method:"DELETE"
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        inboxData.splice(index,1);
+
+        displayMessages();
+
+    });
 
 }
-
 
 
 // Search
