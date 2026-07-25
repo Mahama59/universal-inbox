@@ -1,7 +1,7 @@
 const express = require("express");
-
+const jwt = require("jsonwebtoken");
 const router = express.Router();
-
+const JWT_SECRET = "your-secret-key";
 
 const users = [];
 
@@ -60,17 +60,33 @@ router.post("/login",(req,res)=>{
     }
 
 
-    res.json({
+    const token = jwt.sign(
 
-        message:"Login successful",
+    {
+        id: user.id,
+        username: user.username
+    },
 
-        user:user
+    JWT_SECRET,
 
-    });
+    {
+        expiresIn: "24h"
+    }
 
+);
+
+
+res.json({
+
+    message: "Login successful",
+
+    token: token,
+
+    user: user
 
 });
 
+});
 
 // Status
 
