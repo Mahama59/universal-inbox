@@ -4,21 +4,20 @@ const router = express.Router();
 const authenticate = require("../middleware/auth");
 const { messages } = require("../database/db");
 
-// Get all messages for logged-in user
+
+// Get all messages for the logged-in user
 router.get("/", authenticate, (req, res) => {
 
-    const userId = req.user.id;
-
-    const userMessages = messages.filter(message => {
-        return message.userId === userId;
-    });
+    const userMessages = messages.filter(message =>
+        message.userId === req.user.id
+    );
 
     res.json(userMessages);
 
 });
 
 
-// Create new message
+// Create a new message
 router.post("/", authenticate, (req, res) => {
 
     const newMessage = {
@@ -39,7 +38,7 @@ router.post("/", authenticate, (req, res) => {
 });
 
 
-// Update message
+// Update a message
 router.put("/:id", authenticate, (req, res) => {
 
     const id = parseInt(req.params.id);
@@ -61,7 +60,7 @@ router.put("/:id", authenticate, (req, res) => {
 });
 
 
-// Delete message
+// Delete a message
 router.delete("/:id", authenticate, (req, res) => {
 
     const id = parseInt(req.params.id);
