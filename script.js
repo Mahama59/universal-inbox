@@ -196,9 +196,10 @@ function markRead(index){
 
         method:"PUT",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+      headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+}
 
         body:JSON.stringify({
             status:"Read"
@@ -230,9 +231,10 @@ function markUnread(index){
 
         method:"PUT",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+        headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+}
 
         body:JSON.stringify({
             status:"Unread"
@@ -267,9 +269,10 @@ function toggleStar(index){
 
         method:"PUT",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+        headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+}
 
         body:JSON.stringify({
             starred:newStar
@@ -300,9 +303,10 @@ function archiveMessage(index){
 
         method:"PUT",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+        headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+}
 
         body:JSON.stringify({
             status:"Archived"
