@@ -28,9 +28,11 @@ const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
 
-fetch(
-"http://localhost:3000/messages?userId=" + currentUser.id
-)
+fetch("http://localhost:3000/messages", {
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
 
 .then(response => response.json())
 
