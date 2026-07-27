@@ -1,186 +1,353 @@
-function checkSession(){
+// ======================================================
+// Universal Inbox v2.0
+// Production Ready Frontend
+// ======================================================
 
-    const loggedIn =
-    localStorage.getItem("loggedIn");
-
-
-    if(!loggedIn){
-
-        window.location.href="login.html";
-
-    }
-
-}
-
-// Universal Inbox v1.0
+console.log("Universal Inbox v2 running");
 
 
-console.log("Universal Inbox running");
+// ==============================
+// API Configuration
+// ==============================
 
-
-// Load messages from storage first
-// Load messages from backend API
+const API_URL = "http://localhost:3000";
 
 let inboxData = [];
 
+let token = localStorage.getItem("token");
 
-const currentUser =
+let currentUser =
 JSON.parse(localStorage.getItem("user"));
 
 
-fetch("http://localhost:3000/messages", {
-    headers: {
-        "Authorization": "Bearer " + localStorage.getItem("token")
+
+// ==============================
+// Session Protection
+// ==============================
+
+function checkSession(){
+
+    const publicPages = [
+        "login.html"
+    ];
+
+
+    const page =
+    window.location.pathname;
+
+
+    const isLoginPage =
+    publicPages.some(item =>
+        page.includes(item)
+    );
+
+
+    if(!token && !isLoginPage){
+
+        window.location.href="login.html";
+
+        return false;
+
     }
-})
 
-.then(response => response.json())
 
-.then(data => {
+    return true;
+
+}
+
+
+
+// ==============================
+// API Helper
+// ==============================
+
+async function api(endpoint, options={}){
+
+
+    const response = await fetch(
+        API_URL + endpoint,
+        {
+
+            headers:{
+
+                "Content-Type":"application/json",
+
+                "Authorization":
+                "Bearer " + token
+
+            },
+
+            ...options
+
+        }
+    );
+
+
+    if(response.status === 401){
+
+        logout();
+
+        return;
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+// ==============================
+// Authentication
+// ==============================
+
+
+// Register User
+
+async function register(){
+
+    const username =
+    document.getElementById("username").value;
+
+
+    const password =
+    document.getElementById("password").value;
+
+
+    if(!username || !password){
+
+        alert("Please enter username and password");
+
+        return;
+
+    }
+
+
+    const response =
+    await fetch(API_URL + "/auth/register",
+    {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            username,
+            password
+
+        })
+
+    });
+
+
+    const data =
+    await response.json();
+
+
+    alert(data.message);
+
+
+}
+
+
+
+// Login User
+
+async function login(){
+
+    const username =
+    document.getElementById("username").value;
+
+
+    const password =
+    document.getElementById("password").value;
+
+
+
+    const response =
+    await fetch(API_URL + "/auth/login",
+    {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            username,
+            password
+
+        })
+
+    });
+
+
+
+    const data =
+    await response.json();
+
+
+
+    if(data.token){
+
+
+        localStorage.setItem(
+            "token",
+            data.token
+        );
+
+
+        localStorage.setItem(
+            "user",
+            JSON.stringify(data.user)
+        );
+
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        alert("Login successful");
+
+
+        window.location.href="index.html";
+
+
+    }
+
+    else{
+
+
+        alert(
+            data.message ||
+            "Login failed"
+        );
+
+
+    }
+
+
+}
+
+
+
+
+// Logout
+
+function logout(){
+
+
+    localStorage.removeItem("token");
+
+
+    localStorage.removeItem("user");
+
+
+    localStorage.removeItem("loggedIn");
+
+
+    window.location.href="login.html";
+
+
+}
+
+// ==============================
+// Load User Messages
+// ==============================
+
+
+async function loadMessages(){
+
+    const data = await api("/messages");
+
+
+    if(!data){
+
+        return;
+
+    }
+
 
     inboxData = data;
+
+
+    displayMessages();
+
+
+    updateNotification();
+
+
+}
+
+// ==============================
+// Message Actions
+// ==============================
+
+
+// Mark Read
+
+async function markRead(index){
+
+    const id = inboxData[index].id;
+
+
+    const data = await api(
+        `/messages/${id}`,
+        {
+            method:"PUT",
+
+            body:JSON.stringify({
+
+                status:"Read"
+
+            })
+
+        }
+    );
+
+
+    inboxData[index] = data;
 
     displayMessages();
 
     updateNotification();
 
-})
-
-.catch(error => {
-
-    console.log("API Error:", error);
-
-});
-    {
-        id: 1,
-        platform: "📧 Gmail",
-        sender: "John",
-        message: "Meeting reminder tomorrow",
-        time: "10:30 AM",
-        status: "Unread",
-        starred: false
-    },
-
-    {
-        id: 2,
-        platform: "💬 Slack",
-        sender: "Marketing Team",
-        message: "New campaign update available",
-        time: "9:15 AM",
-        status: "Unread",
-        starred: false
-    },
-
-    {
-        id: 3,
-        platform: "📅 Calendar",
-        sender: "Calendar",
-        message: "Project review at 3 PM",
-        time: "Today",
-        status: "Read",
-        starred: false
-    }
-
-];
-
-
-// Save messages
-function saveMessages(){
-
-    localStorage.setItem(
-        "inboxData",
-        JSON.stringify(inboxData)
-    );
-
 }
 
 
 
-// Display messages
-function displayMessages(messages = inboxData){
+// Mark Unread
 
-    const inbox =
-    document.getElementById("inbox");
+async function markUnread(index){
 
-
-    if(!inbox) return;
+    const id = inboxData[index].id;
 
 
-    inbox.innerHTML = "";
+    const data = await api(
+        `/messages/${id}`,
+        {
+            method:"PUT",
+
+            body:JSON.stringify({
+
+                status:"Unread"
+
+            })
+
+        }
+    );
 
 
-    messages.forEach(function(item,index){
+    inboxData[index] = data;
 
-
-        const messageCard =
-        document.createElement("div");
-
-
-        messageCard.className="message";
-
-
-        messageCard.innerHTML = `
-
-        <div onclick="openMessage(${index})"
-        style="cursor:pointer;">
-
-        <h3>
-        ${item.starred ? "⭐" : ""}
-        ${item.platform}
-        </h3>
-
-
-        <p>
-        <b>${item.sender}:</b>
-        ${item.message}
-        </p>
-
-${item.attachment ? "📎 " + item.attachment : ""}
-
-        <small>
-        ${item.time} -
-        ${item.status}
-        </small>
-
-
-        </div>
-
-
-        <br>
-
-
-        <button onclick="toggleStar(${index})">
-        ⭐ Star
-        </button>
-
-
-        <button onclick="markRead(${index})">
-        ✅ Read
-        </button>
-
-
-        <button onclick="markUnread(${index})">
-        📩 Unread
-        </button>
-
-
-        <button onclick="archiveMessage(${index})">
-        📦 Archive
-        </button>
-
-
-        <button onclick="deleteMessage(${index})">
-        🗑️ Delete
-        </button>
-
-        `;
-
-
-        inbox.appendChild(messageCard);
-
-
-    });
-
+    displayMessages();
 
     updateNotification();
 
@@ -188,173 +355,103 @@ ${item.attachment ? "📎 " + item.attachment : ""}
 
 
 
+// Star Message
 
-function markRead(index){
+async function toggleStar(index){
 
-    const id = inboxData[index].id;
+    const id =
+    inboxData[index].id;
 
 
-    fetch(`http://localhost:3000/messages/${id}`, {
+    const data = await api(
+        `/messages/${id}`,
+        {
+            method:"PUT",
 
-        method:"PUT",
+            body:JSON.stringify({
 
-      headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
+                starred:
+                !inboxData[index].starred
 
-        body:JSON.stringify({
-            status:"Read"
-        })
+            })
 
-    })
+        }
+    );
 
-    .then(response => response.json())
 
-    .then(data => {
+    inboxData[index] = data;
 
-        inboxData[index] = data;
 
-        displayMessages();
-
-    });
+    displayMessages();
 
 }
 
 
 
-// Mark unread
-function markUnread(index){
+// Archive Message
 
-    const id = inboxData[index].id;
+async function archiveMessage(index){
+
+    const id =
+    inboxData[index].id;
 
 
-    fetch(`http://localhost:3000/messages/${id}`, {
+    const data = await api(
+        `/messages/${id}`,
+        {
+            method:"PUT",
 
-        method:"PUT",
+            body:JSON.stringify({
 
-        headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
+                status:"Archived"
 
-        body:JSON.stringify({
-            status:"Unread"
-        })
+            })
 
-    })
+        }
+    );
 
-    .then(response => response.json())
 
-    .then(data => {
+    inboxData[index] = data;
 
-        inboxData[index] = data;
 
-        displayMessages();
-
-    });
+    displayMessages();
 
 }
 
 
 
-// Star message
-function toggleStar(index){
+// Delete Message
 
-    const id = inboxData[index].id;
+async function deleteMessage(index){
 
-    const newStar =
-    !inboxData[index].starred;
+    const id =
+    inboxData[index].id;
 
 
-    fetch(`http://localhost:3000/messages/${id}`, {
+    await api(
+        `/messages/${id}`,
+        {
 
-        method:"PUT",
+            method:"DELETE"
 
-        headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
+        }
+    );
 
-        body:JSON.stringify({
-            starred:newStar
-        })
 
-    })
+    inboxData.splice(index,1);
 
-    .then(response => response.json())
 
-    .then(data => {
+    displayMessages();
 
-        inboxData[index] = data;
 
-        displayMessages();
-
-    });
+    updateNotification();
 
 }
 
+// ==============================
+// Search Messages
+// ==============================
 
-// Archive
-function archiveMessage(index){
-
-    const id = inboxData[index].id;
-
-
-    fetch(`http://localhost:3000/messages/${id}`, {
-
-        method:"PUT",
-
-        headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
-
-        body:JSON.stringify({
-            status:"Archived"
-        })
-
-    })
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        inboxData[index] = data;
-
-        displayMessages();
-
-    });
-
-}
-
-
-// Delete
-function deleteMessage(index){
-
-    const id = inboxData[index].id;
-
-
-    fetch(`http://localhost:3000/messages/${id}`, {
-
-        method:"DELETE"
-
-    })
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        inboxData.splice(index,1);
-
-        displayMessages();
-
-    });
-
-}
-
-
-// Search
 function searchMessages(){
 
     const keyword =
@@ -363,26 +460,28 @@ function searchMessages(){
     .toLowerCase();
 
 
-
     const filtered =
-    inboxData.filter(function(item){
+    inboxData.filter(item => {
 
 
         return (
 
-            item.sender.toLowerCase()
+            item.sender
+            .toLowerCase()
             .includes(keyword)
 
 
             ||
 
-            item.message.toLowerCase()
+            item.message
+            .toLowerCase()
             .includes(keyword)
 
 
             ||
 
-            item.platform.toLowerCase()
+            item.platform
+            .toLowerCase()
             .includes(keyword)
 
         );
@@ -397,17 +496,18 @@ function searchMessages(){
 
 
 
-// Platform filter
-function filterMessages(){
+// ==============================
+// Platform Filter
+// ==============================
 
+function filterMessages(){
 
     const selected =
     document.getElementById("platformFilter")
     .value;
 
 
-
-    if(selected==="All"){
+    if(selected === "All"){
 
         displayMessages();
 
@@ -416,14 +516,12 @@ function filterMessages(){
     }
 
 
-
     const filtered =
-    inboxData.filter(function(item){
+    inboxData.filter(item =>
 
-        return item.platform.includes(selected);
+        item.platform.includes(selected)
 
-    });
-
+    );
 
 
     displayMessages(filtered);
@@ -432,119 +530,70 @@ function filterMessages(){
 
 
 
-// Open message details
-function openMessage(index){
+// ==============================
+// Notifications
+// ==============================
 
-
-    localStorage.setItem(
-        "selectedMessage",
-        JSON.stringify(inboxData[index])
-    );
-
-
-    window.location.href="message.html";
-
-
-}
-
-
-
-// Notification count
 function updateNotification(){
-
 
     const notification =
     document.getElementById("notification");
 
 
-    if(!notification) return;
+    if(!notification){
 
+        return;
+
+    }
 
 
     const unread =
-    inboxData.filter(function(item){
+    inboxData.filter(item =>
 
-        return item.status==="Unread";
+        item.status === "Unread"
 
-    });
-
+    );
 
 
     notification.textContent =
     "🔔 " + unread.length;
 
-
 }
 
 
 
+// ==============================
+// Open Message
+// ==============================
 
-// User session
-
-const currentUser =
-JSON.parse(localStorage.getItem("user"));
-
-
-
-const welcome =
-document.getElementById("welcome");
-
-
-
-if(currentUser && welcome){
-
-    welcome.textContent =
-    "Welcome " + currentUser.username;
-
-}
-
-
-
-
-// Logout
-function logout(){
-
-    localStorage.removeItem("loggedIn");
-
-    localStorage.removeItem("user");
-
-    window.location.href="login.html";
-
-}
-
-
-// Start app
-
-initApp();
-
-function toggleDarkMode(){
-
-    document.body.classList.toggle("dark");
-
-
-    const mode =
-    document.body.classList.contains("dark");
-
+function openMessage(index){
 
     localStorage.setItem(
-        "darkMode",
-        mode
+        "selectedMessage",
+        JSON.stringify(
+            inboxData[index]
+        )
     );
 
-}
 
-
-if(localStorage.getItem("darkMode") === "true"){
-
-    document.body.classList.add("dark");
+    window.location.href =
+    "message.html";
 
 }
 
-const profileUser =
-JSON.parse(localStorage.getItem("user"));
 
 
-if(profileUser){
+// ==============================
+// User Profile
+// ==============================
+
+function loadUserProfile(){
+
+    const user =
+    JSON.parse(
+        localStorage.getItem("user")
+    );
+
 
     const username =
     document.getElementById("username");
@@ -554,60 +603,6 @@ if(profileUser){
     document.getElementById("email");
 
 
-    if(username){
-
-        username.textContent =
-        profileUser.username;
-
-    }
-
-
-    if(email){
-
-        email.textContent =
-        profileUser.email || "Not added";
-
-    }
-
-}
-
-function checkNewMessages(){
-
-    const notification =
-    document.getElementById("notification");
-
-
-    if(!notification) return;
-
-
-    const unread =
-    inboxData.filter(function(item){
-
-        return item.status === "Unread";
-
-    });
-
-
-    notification.textContent =
-    unread.length;
-
-
-}
-
-
-checkNewMessages();
-
-
-function loadUserProfile(){
-
-    const user =
-    JSON.parse(localStorage.getItem("user"));
-
-
-    const username =
-    document.getElementById("username");
-
-
     if(user && username){
 
         username.textContent =
@@ -615,148 +610,90 @@ function loadUserProfile(){
 
     }
 
-}
 
-function loadDarkMode(){
+    if(user && email){
 
-    if(localStorage.getItem("darkMode") === "true"){
-
-        document.body.classList.add("dark");
+        email.textContent =
+        user.email ||
+        "Not added";
 
     }
 
 }
 
+
+
+// ==============================
+// Dark Mode
+// ==============================
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+
+    const enabled =
+    document.body
+    .classList
+    .contains("dark");
+
+
+    localStorage.setItem(
+        "darkMode",
+        enabled
+    );
+
+}
+
+
+
+function loadDarkMode(){
+
+    const mode =
+    localStorage.getItem("darkMode");
+
+
+    if(mode === "true"){
+
+        document.body
+        .classList
+        .add("dark");
+
+    }
+
+}
+
+// ==============================
+// Application Start
+// ==============================
+
+
 function initApp(){
 
     checkSession();
 
-    displayMessages();
 
-    updateNotification();
+    if(token){
 
-    loadDarkMode();
+        loadMessages();
+
+    }
+
 
     loadUserProfile();
 
-}
 
-function register(){
+    loadDarkMode();
 
-    const username =
-    document.getElementById("username").value;
-
-
-    const password =
-    document.getElementById("password").value;
-
-
-    fetch("http://localhost:3000/auth/register", {
-
-        method:"POST",
-
-        headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
-        body:JSON.stringify({
-
-            username: username,
-
-            password: password
-
-        })
-
-    })
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        alert(data.message);
-
-    })
-
-    .catch(error => {
-
-        console.log(error);
-
-    });
 
 }
 
-function login(){
-
-    const username =
-    document.getElementById("username").value;
 
 
-    const password =
-    document.getElementById("password").value;
+// Start Application
 
-
-    fetch("http://localhost:3000/auth/login", {
-
-        method:"POST",
-
-        headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + localStorage.getItem("token")
-}
-
-        body:JSON.stringify({
-
-            username: username,
-
-            password: password
-
-        })
-
-    })
-
-    .then(response => response.json())
-
-    .then(data => {
-
-
-        if(data.user){
-
-
-            localStorage.setItem(
-                "user",
-                JSON.stringify(data.user)
-            );
-
-
-            localStorage.setItem(
-                "loggedIn",
-                "true"
-            );
-
-
-            alert("Login successful!");
-
-
-            window.location.href="index.html";
-
-
-        }
-
-        else{
-
-
-            alert(data.message);
-
-
-        }
-
-
-    })
-
-    .catch(error => {
-
-        console.log(error);
-
-    });
-
-}
+document.addEventListener(
+    "DOMContentLoaded",
+    initApp
+);
+                
